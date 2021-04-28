@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
@@ -20,15 +21,26 @@ namespace DataAccess202
                 {
                     cmd.Connection = con;
                     cmd.CommandText = "Select ProductName from products";
-                    con.Open();
-                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    //con.Open();
+                    //using (SqlDataReader reader = cmd.ExecuteReader())
+                    //{
+                    //    while(reader.Read())
+                    //    {
+                    //        Console.WriteLine(reader["ProductName"]);
+                    //    }
+                    //    Console.ReadLine();
+                    //}
+                    using (SqlDataAdapter ad = new SqlDataAdapter())
                     {
-                        while(reader.Read())
+                        DataSet d = new DataSet();
+                        ad.SelectCommand = cmd;
+                        ad.Fill(d);
+                        foreach(DataRow row in d.Tables[0].Rows)
                         {
-                            Console.WriteLine(reader["ProductName"]);
+                            Console.WriteLine(row.Field<string>("ProductName"));
                         }
-                        Console.ReadLine();
                     }
+                    Console.ReadLine();
                 }
             }
         }
